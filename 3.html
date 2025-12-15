@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rappel - C'est quoi un Arbre ?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-blue { background-color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        .border-brand-blue { border-color: #2F6BF1; }
+        /* Style pour les labels du SVG */
+        .svg-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            fill: #475569; /* Slate-600 */
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-12 uppercase">
+        01. Rappel
+    </div>
+
+    <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight relative inline-block">
+            C'EST QUOI UN <span class="text-brand-blue">ARBRE</span> ?
+        </h2>
+    </div>
+
+    <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-4">
+
+        <div class="space-y-8">
+            
+            <div class="bg-slate-50 p-6 rounded-2xl border-l-4 border-brand-blue shadow-sm">
+                <p class="text-lg md:text-xl text-slate-700 leading-relaxed font-medium">
+                    En théorie des graphes, un arbre est un graphe <span class="text-brand-blue font-bold">connexe</span> et <span class="text-brand-blue font-bold">acyclique</span>.
+                </p>
+            </div>
+
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <div class="mt-1 w-6 h-6 rounded-full bg-brand-pill flex items-center justify-center text-brand-blue font-bold text-xs">✓</div>
+                    <p class="text-slate-600 font-medium text-lg">
+                        <span class="text-slate-900 font-bold">Connexe :</span> Il existe un chemin entre toute paire de sommets.
+                    </p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="mt-1 w-6 h-6 rounded-full bg-brand-pill flex items-center justify-center text-brand-blue font-bold text-xs">✓</div>
+                    <p class="text-slate-600 font-medium text-lg">
+                        <span class="text-slate-900 font-bold">Sans cycle :</span> On ne peut pas revenir à un point de départ sans faire demi-tour.
+                    </p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="mt-1 w-6 h-6 rounded-full bg-brand-pill flex items-center justify-center text-brand-blue font-bold text-xs">N</div>
+                    <p class="text-slate-600 font-medium text-lg">
+                        Pour <span class="font-bold">N</span> sommets, il y a exactement <span class="font-bold">N-1</span> arêtes.
+                    </p>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="relative flex items-center justify-center h-96 md:h-[550px] bg-slate-50 rounded-3xl border border-slate-100 shadow-inner overflow-hidden">
+            <div class="absolute inset-0 opacity-10" 
+                 style="background-image: radial-gradient(#2F6BF1 1px, transparent 1px); background-size: 20px 20px;">
+            </div>
+
+            <svg class="w-full h-full p-4" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+                    </filter>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2F6BF1" />
+                    </marker>
+                </defs>
+
+                <line x1="300" y1="80" x2="180" y2="220" stroke="#CBD5E1" stroke-width="4" />
+                <line x1="300" y1="80" x2="420" y2="220" stroke="#CBD5E1" stroke-width="4" />
+                <line x1="180" y1="220" x2="120" y2="350" stroke="#CBD5E1" stroke-width="4" />
+                <line x1="180" y1="220" x2="240" y2="350" stroke="#CBD5E1" stroke-width="4" />
+                <line x1="420" y1="220" x2="360" y2="350" stroke="#CBD5E1" stroke-width="4" />
+                <line x1="420" y1="220" x2="480" y2="350" stroke="#CBD5E1" stroke-width="4" />
+
+                <g filter="url(#shadow)">
+                    <circle cx="300" cy="80" r="28" class="fill-white stroke-[#2F6BF1]" stroke-width="5" />
+                    <text x="300" y="88" font-family="Montserrat" font-weight="900" font-size="18" fill="#2F6BF1" text-anchor="middle">R</text>
+                </g>
+                <g filter="url(#shadow)">
+                    <circle cx="180" cy="220" r="24" class="fill-[#2F6BF1]" />
+                </g>
+                <g filter="url(#shadow)">
+                    <circle cx="420" cy="220" r="24" class="fill-[#2F6BF1]" />
+                </g>
+                <circle cx="120" cy="350" r="18" class="fill-[#E0F1FD] stroke-[#2F6BF1]" stroke-width="3" />
+                <circle cx="240" cy="350" r="18" class="fill-[#E0F1FD] stroke-[#2F6BF1]" stroke-width="3" />
+                <circle cx="360" cy="350" r="18" class="fill-[#E0F1FD] stroke-[#2F6BF1]" stroke-width="3" />
+                <circle cx="480" cy="350" r="18" class="fill-[#E0F1FD] stroke-[#2F6BF1]" stroke-width="3" />
+
+                <text x="300" y="30" text-anchor="middle" class="svg-label">Racine (Sommet de départ)</text>
+                <path d="M 300 40 L 300 58" stroke="#2F6BF1" stroke-width="2" marker-end="url(#arrowhead)" />
+
+                 <text x="460" y="140" text-anchor="start" class="svg-label">Arête (Lien)</text>
+                 <path d="M 450 145 L 380 165" stroke="#2F6BF1" stroke-width="2" marker-end="url(#arrowhead)" />
+
+                <text x="40" y="220" text-anchor="start" class="svg-label">Nœud Interne</text>
+                <path d="M 145 220 L 160 220" stroke="#2F6BF1" stroke-width="2" marker-end="url(#arrowhead)" />
+
+                <text x="480" y="440" text-anchor="middle" class="svg-label">Feuille (Nœud terminal)</text>
+                <path d="M 480 420 L 480 380" stroke="#2F6BF1" stroke-width="2" marker-end="url(#arrowhead)" />
+
+            </svg>
+        </div>
+
+    </div>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm">
+        3/
+    </div>
+
+</body>
+</html>

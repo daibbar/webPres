@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crédits - M.Daibbar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        .text-brand-blue { color: #2F6BF1; }
+        
+        /* --- ANIMATIONS --- */
+        
+        /* 1. Entrance Fade & Slide */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 2. The "Aura" Glow Pulse */
+        @keyframes auraPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(47, 107, 241, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 60px rgba(47, 107, 241, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(47, 107, 241, 0);
+            }
+        }
+
+        /* 3. Gradient Text Shine */
+        @keyframes shineText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Classes to apply animations */
+        .animate-enter {
+            animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0; /* Start hidden */
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.6s; }
+
+        .aura-container {
+            border-radius: 9999px;
+            animation: auraPulse 3s infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #1e293b 0%, #2F6BF1 50%, #1e293b 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shineText 5s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-100 rounded-full blur-[100px] opacity-40 animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-100 rounded-full blur-[100px] opacity-40 animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+
+    <div class="relative z-10 flex flex-col items-center text-center">
+
+        <div class="animate-enter text-slate-400 font-bold tracking-[0.3em] uppercase text-sm md:text-base mb-8">
+            Designed & Developed By
+        </div>
+
+        <div class="animate-enter delay-1 relative">
+            <div class="absolute inset-0 bg-white rounded-full aura-container -z-10"></div>
+            
+            <h1 class="text-6xl md:text-8xl font-black gradient-text py-4 px-8">
+                M.DAIBBAR
+            </h1>
+        </div>
+
+        <div class="animate-enter delay-2 mt-8 flex items-center gap-3">
+            <div class="h-px w-12 bg-slate-300"></div>
+            <p class="text-slate-500 font-medium italic">
+                IID1
+            </p>
+            <div class="h-px w-12 bg-slate-300"></div>
+        </div>
+
+    </div>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm opacity-50">
+        FIN
+    </div>
+
+</body>
+</html>

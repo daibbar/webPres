@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types d'Arbres : Navigation Contrôlée</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-blue { background-color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        .bg-rose-pill { background-color: #FFF1F2; }
+        .text-rose-pill { color: #BE123C; }
+
+        /* --- CARD STATES --- */
+        .tree-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.5; /* Default: dimmed */
+            transform: scale(0.98);
+            border-color: transparent;
+        }
+
+        /* Active State (Controlled by JS) */
+        .tree-card.active {
+            opacity: 1; /* Fully visible */
+            transform: scale(1.03) translateY(-5px); /* Pop out */
+            box-shadow: 0 20px 40px -5px rgba(47, 107, 241, 0.25);
+            border-color: #2F6BF1;
+            z-index: 10;
+        }
+
+        .list-dot::before {
+            content: "•";
+            color: #2F6BF1;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-8 uppercase">
+        01. Rappel
+    </div>
+
+    <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">
+            LES TYPES & <span class="text-brand-blue">COMPROMIS</span>
+        </h2>
+        <p class="mt-3 text-slate-500 font-medium text-lg">Navigation interactive</p>
+    </div>
+
+    <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 px-4" id="cards-container">
+
+        <div class="tree-card bg-slate-50 rounded-2xl p-6 border-2 flex flex-col md:flex-row gap-6 items-start cursor-pointer">
+            <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 mt-1">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2F6BF1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="5" r="3"></circle>
+                    <path d="M12 8L6 20"></path>
+                    <path d="M12 8L18 20"></path>
+                </svg>
+            </div>
+            <div class="flex-1 w-full">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Arbre Binaire</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Structure de base, max 2 enfants par nœud.
+                </p>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-3 bg-brand-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-brand-pill uppercase tracking-wide shrink-0 mt-0.5">Utilité:</span>
+                        <span class="text-xs font-semibold text-slate-700">Fondation simple.</span>
+                    </div>
+                    <div class="flex items-start gap-3 bg-rose-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-rose-pill uppercase tracking-wide shrink-0 mt-0.5">Limite:</span>
+                        <span class="text-xs font-semibold text-slate-700">Peut dégénérer en liste (Lent).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tree-card bg-slate-50 rounded-2xl p-6 border-2 flex flex-col md:flex-row gap-6 items-start cursor-pointer">
+            <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 mt-1">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2F6BF1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <path d="M12 7L7 12"></path>
+                    <path d="M12 7L17 12"></path>
+                    <text x="12" y="22" font-size="8" font-weight="bold" fill="#2F6BF1" text-anchor="middle">Ordre</text>
+                </svg>
+            </div>
+            <div class="flex-1 w-full">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Arbre Binaire de Recherche</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Arbre ordonné (Gauche < Racine < Droite).
+                </p>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-3 bg-brand-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-brand-pill uppercase tracking-wide shrink-0 mt-0.5">Utilité:</span>
+                        <span class="text-xs font-semibold text-slate-700">Recherche rapide (<span class="font-mono">O(log n)</span>).</span>
+                    </div>
+                    <div class="flex items-start gap-3 bg-rose-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-rose-pill uppercase tracking-wide shrink-0 mt-0.5">Limite:</span>
+                        <span class="text-xs font-semibold text-slate-700">Nécessite un équilibrage complexe.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tree-card bg-slate-50 rounded-2xl p-6 border-2 flex flex-col md:flex-row gap-6 items-start cursor-pointer">
+            <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 mt-1">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2F6BF1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3L4 15h16L12 3z"></path>
+                    <path d="M12 10v4"></path>
+                </svg>
+            </div>
+            <div class="flex-1 w-full">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-800">Tas (Heap)</h3>
+                    <span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded uppercase">Crucial Kruskal</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Arbre complet respectant la propriété de tas.
+                </p>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-3 bg-brand-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-brand-pill uppercase tracking-wide shrink-0 mt-0.5">Utilité:</span>
+                        <span class="text-xs font-semibold text-slate-700">Accès immédiat au Min/Max.</span>
+                    </div>
+                    <div class="flex items-start gap-3 bg-rose-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-rose-pill uppercase tracking-wide shrink-0 mt-0.5">Limite:</span>
+                        <span class="text-xs font-semibold text-slate-700">Recherche arbitraire lente.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tree-card bg-slate-50 rounded-2xl p-6 border-2 flex flex-col md:flex-row gap-6 items-start cursor-pointer">
+            <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 mt-1">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2F6BF1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="6" cy="6" r="3"></circle>
+                    <circle cx="18" cy="6" r="3"></circle>
+                    <circle cx="12" cy="18" r="3"></circle>
+                    <path d="M8 8L10 16" stroke-width="3"></path>
+                    <path d="M16 8L14 16" stroke-width="3"></path>
+                </svg>
+            </div>
+            <div class="flex-1 w-full">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-800">Arbre Couvrant</h3>
+                    <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded uppercase">Objectif</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Connecte tous les sommets avec un coût minimal.
+                </p>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-3 bg-brand-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-brand-pill uppercase tracking-wide shrink-0 mt-0.5">Utilité:</span>
+                        <span class="text-xs font-semibold text-slate-700">Optimisation des coûts.</span>
+                    </div>
+                    <div class="flex items-start gap-3 bg-rose-pill p-3 rounded-lg">
+                        <span class="text-xs font-bold text-rose-pill uppercase tracking-wide shrink-0 mt-0.5">Limite:</span>
+                        <span class="text-xs font-semibold text-slate-700">Fragilité (Rupture facile).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="next-btn" class="absolute bottom-8 right-24 z-50 bg-brand-pill hover:bg-blue-200 text-brand-blue p-4 rounded-full shadow-lg transition-all active:scale-95 group cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </button>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm h-12 flex items-center">
+        4/
+    </div>
+
+    <script>
+        // --- LOGIC ---
+        const cards = document.querySelectorAll('.tree-card');
+        const nextBtn = document.getElementById('next-btn');
+        let currentIndex = 0; // Start at the first card
+
+        // Initialize display
+        updateActiveState();
+
+        function updateActiveState() {
+            cards.forEach((card, index) => {
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        function goNext() {
+            // Cycle: If at end, go back to 0 (optional, currently stops at end or loops)
+            // Let's implement Loop for smooth presentation flow
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Reset to start
+            }
+            updateActiveState();
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = cards.length - 1; // Loop to end
+            }
+            updateActiveState();
+        }
+
+        // --- EVENTS ---
+        
+        // 1. Button Click
+        nextBtn.addEventListener('click', goNext);
+
+        // 2. Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                goNext();
+            } else if (e.key === 'ArrowLeft') {
+                goPrev();
+            }
+        });
+
+        // 3. Click directly on a card to select it
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                currentIndex = index;
+                updateActiveState();
+            });
+        });
+
+    </script>
+</body>
+</html>

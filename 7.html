@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problématique : Optimisation du Coût</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-blue { background-color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        .border-brand-blue { border-color: #2F6BF1; }
+
+        /* --- CARD STYLES --- */
+        .problem-card {
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0.5; 
+            transform: translateX(0);
+            border-left: 4px solid transparent;
+        }
+
+        .problem-card.active {
+            opacity: 1;
+            transform: translateX(10px);
+            background-color: #F8FAFC;
+            border-left: 4px solid #2F6BF1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- SVG ANIMATIONS --- */
+        .node { transition: all 0.5s ease; fill: #CBD5E1; stroke: none; }
+        .node.active { fill: #2F6BF1; filter: drop-shadow(0 0 8px rgba(47, 107, 241, 0.5)); }
+        
+        .edge { transition: all 0.5s ease; stroke: #E2E8F0; stroke-width: 2; stroke-dasharray: 0; }
+        .edge.highlight { stroke: #2F6BF1; stroke-width: 4; }
+        .edge.danger { stroke: #EF4444; stroke-width: 4; stroke-dasharray: 5,5; animation: dash 20s linear infinite; }
+        
+        .weight-label { transition: all 0.3s ease; opacity: 0.3; font-weight: 500; fill: #94A3B8; }
+        .weight-label.active { opacity: 1; font-weight: 800; fill: #0F172A; font-size: 1.1em; }
+        .weight-label.danger { fill: #EF4444; }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -100; }
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-8 uppercase">
+        02. Problématique
+    </div>
+
+    <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">
+            LA PROBLÉMATIQUE : <span class="text-brand-blue">L'OPTIMISATION</span>
+        </h2>
+        <p class="mt-2 text-slate-500 font-medium text-lg">
+            L'Arbre Couvrant Minimum (MST)
+        </p>
+    </div>
+
+    <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-4 h-[500px]">
+
+        <div class="space-y-6 flex flex-col justify-center">
+            
+            <div class="problem-card p-6 rounded-r-xl cursor-pointer group" id="card-0">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-brand-blue font-bold">1</div>
+                    <h3 class="text-xl font-bold text-slate-800">Connecter tout le monde</h3>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed pl-14">
+                    Comment relier <strong>tous les sommets</strong> (villes, ordinateurs) d'un graphe sans en oublier aucun ?
+                </p>
+            </div>
+
+            <div class="problem-card p-6 rounded-r-xl cursor-pointer group" id="card-1">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">2</div>
+                    <h3 class="text-xl font-bold text-slate-800">Minimiser le budget</h3>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed pl-14">
+                    La <strong>somme des poids</strong> des arêtes choisies doit être la plus petite possible. Chaque connexion a un coût.
+                </p>
+            </div>
+
+            <div class="problem-card p-6 rounded-r-xl cursor-pointer group" id="card-2">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500 font-bold">3</div>
+                    <h3 class="text-xl font-bold text-slate-800">Contrainte stricte</h3>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed pl-14">
+                    Pas de redondance. La structure finale ne doit contenir <strong>aucun cycle</strong> (boucle inutile).
+                </p>
+            </div>
+
+        </div>
+
+        <div class="relative flex items-center justify-center h-full bg-slate-50 rounded-3xl border border-slate-100 shadow-inner overflow-hidden">
+            <svg class="w-full h-full max-w-[500px]" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                
+                <line id="edge-bc" x1="50" y1="170" x2="350" y2="170" class="edge" /> <line id="edge-ab" x1="200" y1="40" x2="50" y2="170" class="edge" /> <line id="edge-ac" x1="200" y1="40" x2="350" y2="170" class="edge" /> <line id="edge-bd" x1="50" y1="170" x2="200" y2="310" class="edge" /> <line id="edge-cd" x1="350" y1="170" x2="200" y2="310" class="edge" /> <g class="font-mono text-xs">
+                    <rect x="115" y="95" width="20" height="20" fill="white" fill-opacity="0.8" rx="4"/>
+                    <text id="w-ab" x="125" y="110" text-anchor="middle" class="weight-label">4</text>
+
+                    <rect x="265" y="95" width="20" height="20" fill="white" fill-opacity="0.8" rx="4"/>
+                    <text id="w-ac" x="275" y="110" text-anchor="middle" class="weight-label">2</text>
+                    
+                    <rect x="115" y="230" width="20" height="20" fill="white" fill-opacity="0.8" rx="4"/>
+                    <text id="w-bd" x="125" y="245" text-anchor="middle" class="weight-label">5</text>
+                    
+                    <rect x="265" y="230" width="20" height="20" fill="white" fill-opacity="0.8" rx="4"/>
+                    <text id="w-cd" x="275" y="245" text-anchor="middle" class="weight-label">8</text>
+
+                    <rect x="190" y="160" width="20" height="20" fill="white" fill-opacity="0.8" rx="4"/>
+                    <text id="w-bc" x="200" y="175" text-anchor="middle" class="weight-label">10</text>
+                </g>
+
+                <circle id="node-a" cx="200" cy="40" r="25" class="node" />
+                <text x="200" y="45" fill="white" font-weight="bold" text-anchor="middle" dominant-baseline="middle" pointer-events="none">A</text>
+                
+                <circle id="node-b" cx="50" cy="170" r="25" class="node" />
+                <text x="50" y="175" fill="white" font-weight="bold" text-anchor="middle" dominant-baseline="middle" pointer-events="none">B</text>
+                
+                <circle id="node-c" cx="350" cy="170" r="25" class="node" />
+                <text x="350" y="175" fill="white" font-weight="bold" text-anchor="middle" dominant-baseline="middle" pointer-events="none">C</text>
+                
+                <circle id="node-d" cx="200" cy="310" r="25" class="node" />
+                <text x="200" y="315" fill="white" font-weight="bold" text-anchor="middle" dominant-baseline="middle" pointer-events="none">D</text>
+
+            </svg>
+            
+            <div id="status-text" class="absolute bottom-6 bg-white/90 px-4 py-2 rounded-full text-sm font-bold text-slate-500 shadow-sm border transition-all duration-300">
+                Initialisation...
+            </div>
+        </div>
+
+    </div>
+
+    <button id="next-btn" class="absolute bottom-8 right-24 z-50 bg-brand-pill hover:bg-blue-200 text-brand-blue p-4 rounded-full shadow-lg transition-all active:scale-95 group cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </button>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm">
+        2/
+    </div>
+
+    <script>
+        // Data & Selectors
+        const cards = document.querySelectorAll('.problem-card');
+        const nextBtn = document.getElementById('next-btn');
+        const statusText = document.getElementById('status-text');
+        
+        // SVG Elements
+        const nodes = document.querySelectorAll('.node');
+        const edges = document.querySelectorAll('.edge');
+        const weights = document.querySelectorAll('.weight-label');
+
+        let currentIndex = 0;
+
+        // Visual States logic
+        function updateVisuals(index) {
+            // Reset everything first
+            nodes.forEach(n => n.classList.remove('active'));
+            edges.forEach(e => {
+                e.classList.remove('highlight', 'danger');
+                e.style.opacity = '0.3'; // dim default
+            });
+            weights.forEach(w => w.classList.remove('active', 'danger'));
+
+            // Text UI Update
+            cards.forEach((card, i) => {
+                if(i === index) card.classList.add('active');
+                else card.classList.remove('active');
+            });
+
+            // Logic per step
+            if (index === 0) {
+                // 1. Connecter tout le monde
+                statusText.innerText = "Objectif : Relier A, B, C, D";
+                statusText.className = "absolute bottom-6 bg-blue-50 px-4 py-2 rounded-full text-sm font-bold text-blue-600 shadow-sm border border-blue-100 transition-all duration-300";
+                
+                // Highlight Nodes
+                nodes.forEach(n => n.classList.add('active'));
+                edges.forEach(e => e.style.opacity = '0.1'); // Fade edges out more
+            } 
+            else if (index === 1) {
+                // 2. Minimiser le budget
+                statusText.innerText = "Objectif : Coût total minimum";
+                statusText.className = "absolute bottom-6 bg-green-50 px-4 py-2 rounded-full text-sm font-bold text-green-600 shadow-sm border border-green-100 transition-all duration-300";
+                
+                // Highlight cheap edges
+                document.getElementById('edge-ac').classList.add('highlight'); // 2
+                document.getElementById('edge-ab').classList.add('highlight'); // 4
+                document.getElementById('edge-bd').classList.add('highlight'); // 5
+                
+                edges.forEach(e => e.style.opacity = '1');
+                
+                // Highlight weights
+                weights.forEach(w => w.classList.add('active'));
+            } 
+            else if (index === 2) {
+                // 3. Pas de cycles
+                statusText.innerText = "Interdit : Les cycles (Redondance)";
+                statusText.className = "absolute bottom-6 bg-red-50 px-4 py-2 rounded-full text-sm font-bold text-red-600 shadow-sm border border-red-100 transition-all duration-300";
+                
+                // Show a cycle
+                nodes.forEach(n => n.classList.add('active'));
+                
+                // Highlight cycle path
+                document.getElementById('edge-ab').classList.add('highlight');
+                document.getElementById('edge-ac').classList.add('highlight');
+                document.getElementById('edge-bc').classList.add('danger'); // The culprit
+                document.getElementById('edge-bc').style.opacity = '1';
+
+                // Highlight weights
+                document.getElementById('w-bc').classList.add('active', 'danger');
+            }
+        }
+
+        // Navigation Logic
+        function goNext() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateVisuals(currentIndex);
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = cards.length - 1;
+            }
+            updateVisuals(currentIndex);
+        }
+
+        // Init
+        updateVisuals(0);
+
+        // Events
+        nextBtn.addEventListener('click', goNext);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') goNext();
+            if (e.key === 'ArrowLeft') goPrev();
+        });
+        cards.forEach((card, i) => {
+            card.addEventListener('click', () => {
+                currentIndex = i;
+                updateVisuals(i);
+            });
+        });
+
+    </script>
+</body>
+</html>

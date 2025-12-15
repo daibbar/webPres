@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation & Créateur - Interactif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-blue { background-color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        .border-brand-blue { border-color: #2F6BF1; }
+
+        /* --- INTERACTIVE CARDS --- */
+        .info-card {
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0.3; 
+            transform: translateX(-10px);
+            filter: grayscale(100%);
+        }
+
+        .info-card.active {
+            opacity: 1;
+            transform: translateX(0);
+            filter: grayscale(0%);
+        }
+
+        /* Highlighting the inner box when active */
+        .info-card.active .inner-box {
+            border-color: #2F6BF1;
+            box-shadow: 0 10px 25px -5px rgba(47, 107, 241, 0.15);
+            background-color: #FFFFFF;
+        }
+
+        .inner-box {
+            transition: all 0.3s ease;
+            border-color: transparent;
+        }
+
+        /* Image interaction */
+        #creator-image {
+            transition: all 0.7s ease;
+            filter: grayscale(100%);
+            transform: scale(0.98);
+        }
+        #creator-image.highlight {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(47, 107, 241, 0.4);
+            border-color: #2F6BF1;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-y-auto">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-6 uppercase shrink-0">
+        03. Présentation
+    </div>
+
+    <div class="text-center mb-10 shrink-0">
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">
+            L'ALGORITHME & <span class="text-brand-blue">SON CRÉATEUR</span>
+        </h2>
+        <p class="mt-2 text-slate-500 font-medium text-lg">
+            kruskal daibbar
+        </p>
+    </div>
+
+    <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-4 mb-24">
+
+        <div class="space-y-8 flex flex-col justify-center">
+            
+            <div class="info-card group cursor-pointer" id="card-0">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-brand-blue transition-colors group-[.active]:bg-brand-blue group-[.active]:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 uppercase tracking-wide">Le Principe</h3>
+                </div>
+                <div class="inner-box bg-slate-50 p-6 rounded-2xl border-l-4 border-l-slate-300 group-[.active]:border-l-brand-blue shadow-sm leading-relaxed text-slate-600 font-medium text-sm md:text-base">
+                    <p>
+                        C'est un algorithme <span class="text-brand-blue font-bold">glouton</span> (greedy) qui construit un Arbre Couvrant Minimal.
+                    </p>
+                    <p class="mt-3">
+                        Il sélectionne itérativement l'arête la moins coûteuse du graphe, à condition qu'elle ne forme pas de <span class="text-slate-900 font-bold">cycle</span> avec les arêtes déjà choisies.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-card group cursor-pointer" id="card-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 transition-colors group-[.active]:bg-slate-800 group-[.active]:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 uppercase tracking-wide">L'Origine</h3>
+                </div>
+                <div class="inner-box bg-slate-50 p-6 rounded-2xl border-l-4 border-l-slate-300 group-[.active]:border-l-slate-800 shadow-sm">
+                    <p class="text-slate-600 text-base md:text-lg font-medium leading-relaxed">
+                        L'algorithme a été publié pour la première fois en <span class="font-bold text-slate-900">1956</span> par le mathématicien américain <span class="text-brand-blue font-bold">Joseph Kruskal</span>.
+                    </p>
+                    <p class="text-slate-400 text-xs font-medium mt-2 italic">
+                        Article : "On the shortest spanning subtree of a graph..."
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="flex flex-col items-center justify-center">
+            <div class="relative group">
+                <img id="creator-image"
+                     src="./kruskalimg.png" 
+                     alt="Portrait de Joseph Kruskal" 
+                     class="rounded-3xl shadow-xl border-4 border-slate-200 object-cover object-top max-h-[350px] w-auto">
+                
+                <div class="absolute -z-10 top-6 -right-6 w-full h-full rounded-3xl bg-brand-pill opacity-50 blur-2xl"></div>
+            </div>
+            
+            <div class="mt-6 text-center transition-opacity duration-500" id="image-caption" style="opacity: 0.3;">
+                <h4 class="text-lg font-bold text-slate-800">Joseph B. Kruskal</h4>
+                <p class="text-brand-blue font-bold text-xs uppercase tracking-wider">(1928 – 2010)</p>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="next-btn" class="fixed bottom-8 right-24 z-50 bg-brand-pill hover:bg-blue-200 text-brand-blue p-4 rounded-full shadow-lg transition-all active:scale-95 group cursor-pointer">
+        <svg xmlns="./kruskalimg.png" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </button>
+
+    <div class="fixed bottom-6 right-8 text-slate-300 font-bold text-sm">
+        2B/
+    </div>
+
+    <script>
+        // Selectors
+        const cards = document.querySelectorAll('.info-card');
+        const image = document.getElementById('creator-image');
+        const caption = document.getElementById('image-caption');
+        const nextBtn = document.getElementById('next-btn');
+
+        let currentIndex = 0;
+
+        // Init
+        updateState();
+
+        function updateState() {
+            // Update Cards
+            cards.forEach((card, index) => {
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+
+            // Update Image Effect based on currentIndex
+            if (currentIndex === 1) { // If "L'Origine" is active
+                image.classList.add('highlight');
+                caption.style.opacity = '1';
+                caption.style.transform = 'translateY(0)';
+            } else { // If "Le Principe" is active
+                image.classList.remove('highlight');
+                caption.style.opacity = '0.3';
+                caption.style.transform = 'translateY(5px)';
+            }
+        }
+
+        // Navigation Logic
+        function goNext() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Loop back
+            }
+            updateState();
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = cards.length - 1;
+            }
+            updateState();
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', goNext);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') goNext();
+            if (e.key === 'ArrowLeft') goPrev();
+        });
+
+        // Click directly on cards
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                currentIndex = index;
+                updateState();
+            });
+        });
+
+    </script>
+</body>
+</html>

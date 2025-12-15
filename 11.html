@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonctions Union-Find et Tri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-blue { background-color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        .border-brand-blue { border-color: #2F6BF1; }
+        
+        /* Syntax Highlighting Colors (One Dark / Dracula style) */
+        .code-base { color: #ABB2BF; } /* Light Grey for brackets/punctuation - FIXES BLACK ISSUE */
+        .code-keyword { color: #C678DD; } /* Purple */
+        .code-type { color: #E5C07B; } /* Yellow */
+        .code-func { color: #61AFEF; } /* Blue */
+        .code-var { color: #E06C75; } /* Red */
+        .code-comment { color: #7F848E; font-style: italic; } /* Grey */
+        .code-struct { color: #98C379; } /* Green */
+        
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #21252B; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 4px; }
+
+        /* Card States */
+        .expl-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.4; /* Dimmed by default */
+            transform: scale(0.98);
+            border-color: transparent;
+        }
+        .expl-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            background-color: #ffffff;
+            border-color: #2F6BF1; /* Brand Blue border */
+            box-shadow: 0 10px 30px -5px rgba(47, 107, 241, 0.15);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-8 uppercase">
+        04. Implémentation
+    </div>
+
+    <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tight leading-tight">
+            FONCTIONS CLÉS & <span class="text-brand-blue">LOGIQUE</span>
+        </h2>
+        <p class="mt-2 text-slate-500 font-medium text-lg">Tri, Recherche et Union</p>
+    </div>
+
+    <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-start px-4 h-[600px]">
+
+        <div class="space-y-4 flex flex-col justify-center h-full pr-4">
+            
+            <div class="expl-card bg-slate-50 border-2 p-5 rounded-2xl cursor-pointer" id="card-0">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">01</div>
+                    <h3 class="text-lg font-bold text-slate-800">Fonction Compare (Tri)</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                    Indispensable pour <code class="bg-slate-200 px-1 rounded text-xs">qsort</code>. Elle trie les arêtes par poids croissant. C'est la base de l'approche gloutonne : on traite toujours l'arête la moins coûteuse d'abord.
+                </p>
+            </div>
+
+            <div class="expl-card bg-slate-50 border-2 p-5 rounded-2xl cursor-pointer" id="card-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-brand-blue font-bold text-xs">02</div>
+                    <h3 class="text-lg font-bold text-slate-800">Fonction Find</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                    Recherche la racine d’un sommet en appliquant la compression de chemin, optimisant ainsi les appels futurs en réduisant la profondeur de l’arborescence.
+                </p>
+            </div>
+
+            <div class="expl-card bg-slate-50 border-2 p-5 rounded-2xl cursor-pointer" id="card-2">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600 font-bold text-xs">03</div>
+                    <h3 class="text-lg font-bold text-slate-800">Fonction Union</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                    Fusionne deux ensembles en utilisant le rang pour attacher la racine de rang inférieur sous celle de rang supérieur, préservant l’équilibre des arbres Union-Find.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-[#282C34] border border-slate-700/50 flex flex-col h-full max-h-[550px]">
+            
+            <div class="bg-[#21252B] px-4 py-3 flex items-center gap-2 border-b border-slate-700 shrink-0">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <span class="ml-4 text-xs text-slate-400 font-mono">core_functions.c</span>
+            </div>
+
+            <div class="p-6 overflow-y-auto custom-scrollbar grow text-[#ABB2BF] scroll-smooth" id="code-container">
+                <pre class="text-sm leading-relaxed"><code>
+<span class="code-comment">// 01. Fonction de comparaison pour qsort</span>
+<span class="code-type">int</span> <span class="code-func">compare</span>(<span class="code-keyword">const</span> <span class="code-type">void</span>* <span class="code-var">a</span>, <span class="code-keyword">const</span> <span class="code-type">void</span>* <span class="code-var">b</span>)
+{
+    <span class="code-struct">Edge</span>* <span class="code-var">a1</span> = (<span class="code-struct">Edge</span>*)<span class="code-var">a</span>;
+    <span class="code-struct">Edge</span>* <span class="code-var">b1</span> = (<span class="code-struct">Edge</span>*)<span class="code-var">b</span>;
+    <span class="code-keyword">return</span> <span class="code-var">a1</span>->weight - <span class="code-var">b1</span>->weight;
+}
+
+<span class="code-comment">// -----------------------------------------</span>
+
+<span class="code-comment">// 02. Trouver le représentant (avec compression)</span>
+<span class="code-type">int</span> <span class="code-func">find</span>(<span class="code-struct">Subset</span> <span class="code-var">subsets</span>[], <span class="code-type">int</span> <span class="code-var">i</span>)
+{
+    <span class="code-keyword">if</span> (<span class="code-var">subsets</span>[<span class="code-var">i</span>].parent != <span class="code-var">i</span>)
+    {
+        <span class="code-var">subsets</span>[<span class="code-var">i</span>].parent = <span class="code-func">find</span>(<span class="code-var">subsets</span>, 
+                                 <span class="code-var">subsets</span>[<span class="code-var">i</span>].parent);
+    }
+    <span class="code-keyword">return</span> <span class="code-var">subsets</span>[<span class="code-var">i</span>].parent;
+}
+
+<span class="code-comment">// -----------------------------------------</span>
+
+<span class="code-comment">// 03. Union de deux ensembles (par rang)</span>
+<span class="code-type">void</span> <span class="code-func">unionSets</span>(<span class="code-struct">Subset</span> <span class="code-var">subsets</span>[], <span class="code-type">int</span> <span class="code-var">rootX</span>, <span class="code-type">int</span> <span class="code-var">rootY</span>)
+{
+    <span class="code-keyword">if</span> (<span class="code-var">subsets</span>[<span class="code-var">rootX</span>].rank < <span class="code-var">subsets</span>[<span class="code-var">rootY</span>].rank)
+        <span class="code-var">subsets</span>[<span class="code-var">rootX</span>].parent = <span class="code-var">rootY</span>;
+    
+    <span class="code-keyword">else if</span> (<span class="code-var">subsets</span>[<span class="code-var">rootX</span>].rank > <span class="code-var">subsets</span>[<span class="code-var">rootY</span>].rank)
+        <span class="code-var">subsets</span>[<span class="code-var">rootY</span>].parent = <span class="code-var">rootX</span>;
+    
+    <span class="code-keyword">else</span>
+    {
+        <span class="code-var">subsets</span>[<span class="code-var">rootY</span>].parent = <span class="code-var">rootX</span>;
+        <span class="code-var">subsets</span>[<span class="code-var">rootX</span>].rank++;
+    }
+}
+                </code></pre>
+            </div>
+            
+            <div class="absolute top-0 right-0 w-64 h-64 bg-brand-blue opacity-5 blur-[100px] pointer-events-none"></div>
+        </div>
+
+    </div>
+
+    <button id="next-btn" class="absolute bottom-8 right-24 z-50 bg-brand-pill hover:bg-blue-200 text-brand-blue p-4 rounded-full shadow-lg transition-all active:scale-95 group cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </button>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm">
+        7/
+    </div>
+
+    <script>
+        // DOM Elements
+        const cards = document.querySelectorAll('.expl-card');
+        const nextBtn = document.getElementById('next-btn');
+        const codeContainer = document.getElementById('code-container');
+        
+        // Define exact scroll positions for each function (in pixels)
+        // These values correspond to the "top" of each function in the <pre> block
+        const scrollPositions = [0, 180, 400]; 
+
+        let currentIndex = 0;
+
+        // Init
+        updateState();
+
+        function updateState() {
+            // 1. Update Cards UI
+            cards.forEach((card, index) => {
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                    card.classList.remove('bg-slate-50', 'border-transparent');
+                } else {
+                    card.classList.remove('active');
+                    card.classList.add('bg-slate-50', 'border-transparent');
+                }
+            });
+
+            // 2. Auto-scroll Code
+            codeContainer.scrollTo({
+                top: scrollPositions[currentIndex],
+                behavior: 'smooth'
+            });
+        }
+
+        // Navigation Logic
+        function goNext() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Loop back to start
+            }
+            updateState();
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = cards.length - 1;
+            }
+            updateState();
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', goNext);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') goNext();
+            if (e.key === 'ArrowLeft') goPrev();
+        });
+
+        // Click on cards directly
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                currentIndex = index;
+                updateState();
+            });
+        });
+    </script>
+</body>
+</html>

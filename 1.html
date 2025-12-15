@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Algorithme de Kruskal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+
+        /* --- Animation Logic --- */
+        
+        /* The base animation class */
+        .slide-in-bottom {
+            opacity: 0; /* Start hidden */
+            animation: slideInBottom 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Keyframes */
+        @keyframes slideInBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stagger Delays (The Secret Sauce) */
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-700 { animation-delay: 0.7s; }
+
+        /* Subtle Background Animation */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+
+    <div class="blob bg-blue-100 w-96 h-96 top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="blob bg-blue-50 w-80 h-80 bottom-0 right-0 translate-x-1/3 translate-y-1/3 animation-delay-2000"></div>
+
+    <div class="slide-in-bottom delay-100 bg-brand-pill text-brand-pill px-8 py-2 rounded-full font-bold text-sm tracking-wide shadow-sm mb-10">
+        Théorie des Graphes & Algorithmique
+    </div>
+
+    <div class="text-center space-y-2 mb-8">
+        <h1 class="slide-in-bottom delay-200 text-5xl md:text-7xl font-black text-slate-900 uppercase tracking-tight">
+            L'ALGORITHME
+        </h1>
+        <h1 class="slide-in-bottom delay-300 text-5xl md:text-7xl font-black text-brand-blue uppercase tracking-tight">
+            DE KRUSKAL
+        </h1>
+    </div>
+
+    <div class="slide-in-bottom delay-500 text-center mb-16">
+        <p class="text-xl md:text-2xl text-slate-500 font-medium">
+            De la Théorie à l'Implémentation en C
+        </p>
+    </div>
+
+    <div class="slide-in-bottom delay-700 w-full max-w-4xl px-4 text-slate-700 text-lg md:text-xl">
+<div class="slide-in-bottom delay-700 w-full px-4 flex justify-center">
+    
+    <div class="animate-levitate bg-white/60 backdrop-blur-md border border-slate-200 rounded-2xl p-8 shadow-lg max-w-3xl">
+        
+        <div class="grid grid-cols-[auto_auto_1fr] gap-x-5 gap-y-3 items-baseline text-lg md:text-xl">
+            
+            <div class="text-slate-500 font-medium text-right text-sm md:text-base uppercase tracking-wider self-center">
+                Réalisé par
+            </div>
+            <div class="text-brand-blue font-black self-center">•</div>
+            <div class="flex flex-wrap gap-x-6 gap-y-1">
+                <span class="group"><span class="font-bold text-slate-800">DAIBBAR</span> Mohamed</span>
+                <span class="group"><span class="font-bold text-slate-800">LABSER</span> Yahya</span>
+                <span class="group"><span class="font-bold text-slate-800">ABID</span> Yahya</span>
+            </div>
+
+            <div class="text-slate-500 font-medium text-right text-sm md:text-base uppercase tracking-wider self-center">
+                Encadré par
+            </div>
+            <div class="text-brand-blue font-black self-center">•</div>
+            <div>
+                <span><span class="font-bold text-slate-800">ENNAJI</span> Fatima-zohra</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm">
+        1/
+    </div>
+
+</body>
+</html>

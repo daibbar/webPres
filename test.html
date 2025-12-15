@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Presentation</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000; /* Background behind slides */
+        }
+
+        .slide-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            pointer-events: none; /* Prevents clicking on hidden slides */
+            transition: opacity 0.5s ease-in-out;
+            background: white; /* Default background if slide is transparent */
+        }
+
+        iframe.active {
+            opacity: 1;
+            pointer-events: auto; /* Allows interaction */
+            z-index: 10;
+        }
+
+        /* OPTIONAL: Click Blocker
+           If you don't need to click links inside your slides, 
+           this transparent layer keeps keyboard focus on the main window.
+           Remove this if you have buttons/links inside slides.
+        */
+        .click-blocker {
+            position: absolute;
+            inset: 0;
+            z-index: 50; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        
+        <iframe src="1.html" class="slide active"></iframe>
+
+        <iframe src="2.html" class="slide"></iframe>
+        
+        <iframe src="3.html" class="slide"></iframe>
+
+
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentIndex = 0;
+
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                if (index === currentIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+                updateSlides();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlides();
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+    </script>
+
+</body>
+</html>

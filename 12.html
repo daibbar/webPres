@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonction Principale - Kruskal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-blue { background-color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        .border-brand-blue { border-color: #2F6BF1; }
+        
+        /* Syntax Highlighting Colors */
+        .code-base { color: #ABB2BF; } /* Brackets/Punctuation - FIXES BLACK ISSUE */
+        .code-keyword { color: #C678DD; } /* Purple */
+        .code-type { color: #E5C07B; } /* Yellow */
+        .code-func { color: #61AFEF; } /* Blue */
+        .code-var { color: #E06C75; } /* Red */
+        .code-comment { color: #7F848E; font-style: italic; } /* Grey */
+        .code-num { color: #D19A66; } /* Orange/Brown for numbers */
+        
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #21252B; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 4px; }
+
+        /* Card States */
+        .expl-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.4; /* Dimmed by default */
+            transform: scale(0.98);
+            border-color: transparent;
+        }
+        .expl-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            background-color: #ffffff;
+            border-color: #2F6BF1;
+            box-shadow: 0 10px 30px -5px rgba(47, 107, 241, 0.15);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-6 uppercase">
+        05. Implémentation
+    </div>
+
+    <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">
+            FONCTION <span class="text-brand-blue">PRINCIPALE</span>
+        </h2>
+        <p class="mt-4 text-slate-500 font-medium text-lg max-w-2xl mx-auto">
+            Initialisation du graphe et appel de l'algorithme de Kruskal
+        </p>
+    </div>
+
+    <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-start px-4 h-[600px]">
+
+        <div class="space-y-4 flex flex-col justify-center h-full pr-4">
+            
+            <div class="expl-card bg-slate-50 border-2 p-6 rounded-2xl cursor-pointer" id="card-0">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-2 h-8 bg-brand-blue rounded-full"></div>
+                    <h3 class="text-lg font-bold text-slate-800">1. Orchestration & Initialisation</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                    En tant que cœur de l'implémentation, cette fonction orchestre l'ensemble du processus : elle initialise les structures...
+                </p>
+            </div>
+
+            <div class="expl-card bg-slate-50 border-2 p-6 rounded-2xl cursor-pointer" id="card-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-2 h-8 bg-purple-500 rounded-full"></div>
+                    <h3 class="text-lg font-bold text-slate-800">2. Tri et Sélection</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                    ...trie les arêtes, puis itère sur ces dernières en utilisant Union-Find pour sélectionner les arêtes sûres.
+                </p>
+            </div>
+
+            <div class="expl-card bg-slate-50 border-2 p-6 rounded-2xl cursor-pointer" id="card-2">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-2 h-8 bg-green-500 rounded-full"></div>
+                    <h3 class="text-lg font-bold text-slate-800">3. Assemblage Final</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                    Elle assemble progressivement l'arbre couvrant minimal tout en calculant son poids total, illustrant ainsi l'application concrète de l'algorithme.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-[#282C34] border border-slate-700/50 flex flex-col h-full max-h-[580px]">
+            
+            <div class="bg-[#21252B] px-4 py-3 flex items-center gap-2 border-b border-slate-700 shrink-0">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <span class="ml-4 text-xs text-slate-400 font-mono">main_kruskal.c</span>
+            </div>
+
+            <div class="p-6 overflow-y-auto custom-scrollbar grow text-[#ABB2BF] scroll-smooth" id="code-container">
+                <pre class="text-sm leading-relaxed"><code>
+<span class="code-keyword">void</span> <span class="code-func">kruskal</span>(<span class="code-struct">Edge</span> <span class="code-var">edges</span>[], <span class="code-type">int</span> <span class="code-var">V</span>, <span class="code-type">int</span> <span class="code-var">E</span>)
+{
+    <span class="code-struct">Edge</span> <span class="code-var">result</span>[<span class="code-var">V</span> - <span class="code-num">1</span>]; <span class="code-comment">// Arbre couvrant minimum</span>
+    <span class="code-struct">Subset</span> <span class="code-var">subsets</span>[<span class="code-var">V</span>];
+
+    <span class="code-comment">// Initialisation des sous-ensembles</span>
+    <span class="code-keyword">for</span> (<span class="code-type">int</span> <span class="code-var">v</span> = <span class="code-num">0</span>; <span class="code-var">v</span> < <span class="code-var">V</span>; <span class="code-var">v</span>++)
+    {
+        <span class="code-var">subsets</span>[<span class="code-var">v</span>].parent = <span class="code-var">v</span>;
+        <span class="code-var">subsets</span>[<span class="code-var">v</span>].rank = <span class="code-num">0</span>;
+    }
+
+    <span class="code-comment">// Trier les arêtes</span>
+    <span class="code-func">qsort</span>(<span class="code-var">edges</span>, <span class="code-var">E</span>, <span class="code-keyword">sizeof</span>(<span class="code-struct">Edge</span>), <span class="code-func">compare</span>);
+
+    <span class="code-type">int</span> <span class="code-var">e</span> = <span class="code-num">0</span>; <span class="code-comment">// nombre d'arêtes dans le MST</span>
+    <span class="code-type">int</span> <span class="code-var">i</span> = <span class="code-num">0</span>; <span class="code-comment">// index pour les arêtes triées</span>
+
+    <span class="code-keyword">while</span> (<span class="code-var">e</span> < <span class="code-var">V</span> - <span class="code-num">1</span> && <span class="code-var">i</span> < <span class="code-var">E</span>)
+    {
+        <span class="code-struct">Edge</span> <span class="code-var">next</span> = <span class="code-var">edges</span>[<span class="code-var">i</span>++];
+
+        <span class="code-type">int</span> <span class="code-var">x</span> = <span class="code-func">find</span>(<span class="code-var">subsets</span>, <span class="code-var">next</span>.src);
+        <span class="code-type">int</span> <span class="code-var">y</span> = <span class="code-func">find</span>(<span class="code-var">subsets</span>, <span class="code-var">next</span>.dest);
+
+        <span class="code-comment">// Vérifier si l'ajout crée un cycle</span>
+        <span class="code-keyword">if</span> (<span class="code-var">x</span> != <span class="code-var">y</span>)
+        {
+            <span class="code-var">result</span>[<span class="code-var">e</span>++] = <span class="code-var">next</span>;
+            <span class="code-func">unionSets</span>(<span class="code-var">subsets</span>, <span class="code-var">x</span>, <span class="code-var">y</span>);
+        }
+    }
+}
+                </code></pre>
+            </div>
+            
+            <div class="absolute top-0 right-0 w-64 h-64 bg-brand-blue opacity-5 blur-[100px] pointer-events-none"></div>
+        </div>
+
+    </div>
+
+    <button id="next-btn" class="absolute bottom-8 right-24 z-50 bg-brand-pill hover:bg-blue-200 text-brand-blue p-4 rounded-full shadow-lg transition-all active:scale-95 group cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </button>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm">
+        8/
+    </div>
+
+    <script>
+        // DOM Elements
+        const cards = document.querySelectorAll('.expl-card');
+        const nextBtn = document.getElementById('next-btn');
+        const codeContainer = document.getElementById('code-container');
+        
+        // Scroll positions: [Init Loop, Qsort, While Loop]
+        const scrollPositions = [0, 230, 320]; 
+
+        let currentIndex = 0;
+
+        // Init
+        updateState();
+
+        function updateState() {
+            // 1. Update Cards UI
+            cards.forEach((card, index) => {
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                    card.classList.remove('bg-slate-50', 'border-transparent');
+                } else {
+                    card.classList.remove('active');
+                    card.classList.add('bg-slate-50', 'border-transparent');
+                }
+            });
+
+            // 2. Auto-scroll Code
+            codeContainer.scrollTo({
+                top: scrollPositions[currentIndex],
+                behavior: 'smooth'
+            });
+        }
+
+        // Navigation Logic
+        function goNext() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateState();
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = cards.length - 1;
+            }
+            updateState();
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', goNext);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') goNext();
+            if (e.key === 'ArrowLeft') goPrev();
+        });
+
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                currentIndex = index;
+                updateState();
+            });
+        });
+    </script>
+</body>
+</html>

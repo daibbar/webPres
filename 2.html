@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sommaire - Algorithme de Kruskal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .text-brand-blue { color: #2F6BF1; }
+        .bg-brand-pill { background-color: #E0F1FD; }
+        .text-brand-pill { color: #2B7CB6; }
+        
+        /* Smooth transition for all property changes */
+        .toc-item, .toc-number {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="bg-brand-pill text-brand-pill px-6 py-2 rounded-full font-bold text-xs md:text-sm tracking-wide shadow-sm mb-12 uppercase">
+        Table de représentation
+    </div>
+
+    <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight relative inline-block">
+            Sommaire
+            <span class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-12 h-1.5 bg-brand-pill rounded-full"></span>
+        </h2>
+    </div>
+
+    <div class="w-full max-w-5xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 px-4" id="toc-grid">
+            
+            <div id="item-0" class="toc-item group flex items-center gap-5 p-4 rounded-xl cursor-pointer border-l-4 border-transparent">
+                <span class="toc-number text-5xl font-black text-brand-blue opacity-30">01</span>
+                <span class="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">Rappel</span>
+            </div>
+
+            <div id="item-1" class="toc-item group flex items-center gap-5 p-4 rounded-xl cursor-pointer border-l-4 border-transparent">
+                <span class="toc-number text-5xl font-black text-brand-blue opacity-30">02</span>
+                <span class="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">Problématique</span>
+            </div>
+
+            <div id="item-2" class="toc-item group flex items-center gap-5 p-4 rounded-xl cursor-pointer border-l-4 border-transparent">
+                <span class="toc-number text-5xl font-black text-brand-blue opacity-30">03</span>
+                <span class="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">Algorithme</span>
+            </div>
+
+            <div id="item-3" class="toc-item group flex items-center gap-5 p-4 rounded-xl cursor-pointer border-l-4 border-transparent">
+                <span class="toc-number text-5xl font-black text-brand-blue opacity-30">04</span>
+                <span class="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">Implémentation</span>
+            </div>
+
+            <div id="item-4" class="toc-item group flex items-center gap-5 p-4 rounded-xl cursor-pointer border-l-4 border-transparent">
+                <span class="toc-number text-5xl font-black text-brand-blue opacity-30">05</span>
+                <span class="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">Complexité</span>
+            </div>
+
+            <div id="item-5" class="toc-item group flex items-center gap-5 p-4 rounded-xl cursor-pointer border-l-4 border-transparent">
+                <span class="toc-number text-5xl font-black text-brand-blue opacity-30">06</span>
+                <span class="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">Exercice</span>
+            </div>
+
+        </div>
+    </div>
+
+    <button id="next-btn" class="absolute bottom-8 right-24 z-50 bg-brand-pill hover:bg-blue-200 text-brand-blue p-4 rounded-full shadow-lg transition-all active:scale-95 group cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </button>
+
+    <div class="absolute bottom-6 right-8 text-slate-300 font-bold text-sm h-12 flex items-center">
+        2/
+    </div>
+
+    <script>
+        // Select all items
+        const items = document.querySelectorAll('.toc-item');
+        const nextBtn = document.getElementById('next-btn');
+        let currentIndex = 0;
+
+        // Function to update the look
+        function updateDisplay() {
+            items.forEach((item, index) => {
+                const numberSpan = item.querySelector('.toc-number');
+                
+                if (index === currentIndex) {
+                    // --- ACTIVE STATE ---
+                    // 1. Box Styling
+                    item.classList.add('bg-slate-50', 'border-blue-600', 'shadow-sm');
+                    item.classList.remove('border-transparent');
+                    
+                    // 2. Number Styling (Make it dark blue and big)
+                    numberSpan.classList.remove('opacity-30');
+                    numberSpan.classList.add('opacity-100', 'scale-110');
+                } else {
+                    // --- INACTIVE STATE ---
+                    // 1. Box Styling
+                    item.classList.remove('bg-slate-50', 'border-blue-600', 'shadow-sm');
+                    item.classList.add('border-transparent');
+                    
+                    // 2. Number Styling (Make it faded)
+                    numberSpan.classList.remove('opacity-100', 'scale-110');
+                    numberSpan.classList.add('opacity-30');
+                }
+            });
+        }
+
+        // Run once on load to highlight the first item
+        updateDisplay();
+
+        // Button Click Event
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+                updateDisplay();
+            }
+        });
+
+        // Keyboard Event
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    updateDisplay();
+                }
+            }
+            if (e.key === 'ArrowLeft') {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateDisplay();
+                }
+            }
+        });
+        
+        // Allow clicking directly on items
+        items.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                currentIndex = index;
+                updateDisplay();
+            });
+        });
+
+    </script>
+</body>
+</html>

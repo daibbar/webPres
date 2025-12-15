@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kruskal : Réseau Inter-Villes Maroc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb', 
+                            dark: '#1e293b',
+                            light: '#f8fafc',
+                            danger: '#ef4444',
+                            success: '#22c55e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        /* SVG Styling */
+        .graph-node { fill: white; stroke: #2563eb; stroke-width: 3px; z-index: 10; position: relative; transition: all 0.3s ease; }
+        /* Reduced font size for city names */
+        .graph-text { font-family: 'Montserrat', sans-serif; font-weight: 700; fill: #1e293b; font-size: 11px; dominant-baseline: middle; text-anchor: middle; pointer-events: none; }
+        
+        .graph-edge { stroke: #cbd5e1; stroke-width: 2px; transition: all 0.5s ease; stroke-linecap: round; }
+        
+        .edge-label { fill: #64748b; font-size: 14px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; text-anchor: middle; cursor: default; transition: fill 0.3s; }
+
+        /* States for JS Animation */
+        .edge-active { stroke: #f59e0b !important; stroke-width: 4px !important; } 
+        .edge-accepted { stroke: #22c55e !important; stroke-width: 4px !important; } 
+        .edge-rejected { stroke: #ef4444 !important; stroke-width: 2px !important; stroke-dasharray: 5,5; opacity: 0.4; } 
+        
+        .label-active { fill: #f59e0b !important; font-size: 16px; }
+        .label-accepted { fill: #22c55e !important; font-size: 16px; }
+        .label-rejected { fill: #ef4444 !important; opacity: 0.5; }
+
+        .log-entry { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 p-4 md:p-8 flex flex-col items-center min-h-screen">
+
+    <div class="w-full max-w-7xl mb-8 flex justify-between items-end">
+        <div>
+            <h2 class="text-blue-600 font-bold tracking-widest uppercase text-sm mb-1">Algorithme de Kruskal</h2>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
+                Optimisation Fibre Optique : Maroc
+            </h1>
+        </div>
+        <div class="flex gap-3">
+             <button onclick="resetGraph()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-300 transition shadow-sm">
+                <i class="fa-solid fa-rotate-left mr-2"></i>Reset
+            </button>
+            <button onclick="nextStep()" id="btn-next" class="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-lg flex items-center">
+                Étape Suivante <i class="fa-solid fa-play ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <div class="lg:col-span-4 bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden flex flex-col h-[500px]">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700 flex justify-between items-center">
+                <span>Journal de connexion</span>
+                <span id="step-counter" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Étape 0/12</span>
+            </div>
+            <div id="log-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <p class="text-slate-400 text-sm italic text-center mt-10" id="empty-msg">Lancer l'algorithme pour connecter les villes.</p>
+                </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200">
+                <div class="flex justify-between items-center text-sm font-bold">
+                    <span class="text-slate-600">Coût Total (km/10) :</span>
+                    <span id="total-cost" class="text-2xl text-blue-600">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-8 relative bg-white rounded-2xl p-4 shadow-xl border border-slate-200 aspect-[4/3] md:aspect-video flex items-center justify-center">
+            
+            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur p-3 rounded-lg shadow-sm border border-slate-100 text-xs font-semibold space-y-2 z-20">
+                <div class="flex items-center gap-2"><div class="w-3 h-3 bg-green-500 rounded-full"></div> Liaison Validée</div>
+                <div class="flex items-center gap-2"><div class="w-3 h-3 bg-red-400 opacity-50 rounded-full"></div> Liaison Rejetée (Redondante)</div>
+            </div>
+
+            <svg viewBox="0 0 600 450" class="w-full h-full drop-shadow-sm" id="main-svg">
+                <line id="edge-e-g" x1="300" y1="380" x2="300" y2="220" class="graph-edge" />
+                
+                <line id="edge-a-g" x1="100" y1="100" x2="300" y2="220" class="graph-edge" />
+                
+                <line id="edge-d-a" x1="100" y1="340" x2="100" y2="100" class="graph-edge" />
+                
+                <line id="edge-e-d" x1="300" y1="380" x2="100" y2="340" class="graph-edge" />
+                <line id="edge-d-g" x1="100" y1="340" x2="300" y2="220" class="graph-edge" />
+                
+                <line id="edge-b-c" x1="300" y1="60" x2="500" y2="100" class="graph-edge" />
+                <line id="edge-c-g" x1="500" y1="100" x2="300" y2="220" class="graph-edge" />
+                
+                <line id="edge-a-b" x1="100" y1="100" x2="300" y2="60" class="graph-edge" />
+                <line id="edge-f-g" x1="500" y1="340" x2="300" y2="220" class="graph-edge" />
+                
+                <line id="edge-f-e" x1="500" y1="340" x2="300" y2="380" class="graph-edge" />
+                
+                <line id="edge-c-f" x1="500" y1="100" x2="500" y2="340" class="graph-edge" />
+                
+                <line id="edge-b-g" x1="300" y1="60" x2="300" y2="220" class="graph-edge" />
+
+                <text id="label-e-g" x="320" y="310" class="edge-label">1</text>
+                <text id="label-a-g" x="220" y="150" class="edge-label">2</text>
+                <text id="label-d-a" x="80" y="220" class="edge-label">3</text>
+                <text id="label-e-d" x="200" y="380" class="edge-label">4</text>
+                <text id="label-d-g" x="220" y="290" class="edge-label">4</text>
+                <text id="label-b-c" x="400" y="70" class="edge-label">5</text>
+                <text id="label-c-g" x="390" y="150" class="edge-label">5</text>
+                <text id="label-a-b" x="200" y="70" class="edge-label">6</text>
+                <text id="label-f-g" x="390" y="290" class="edge-label">6</text>
+                <text id="label-f-e" x="400" y="380" class="edge-label">7</text>
+                <text id="label-c-f" x="520" y="220" class="edge-label">8</text>
+                <text id="label-b-g" x="320" y="140" class="edge-label">9</text>
+
+                <g class="nodes">
+                    <circle cx="100" cy="100" r="30" class="graph-node" />
+                    <text x="100" y="100" class="graph-text">Tanger</text>
+
+                    <circle cx="300" cy="60" r="30" class="graph-node" />
+                    <text x="300" y="60" class="graph-text">Rabat</text>
+
+                    <circle cx="500" cy="100" r="30" class="graph-node" />
+                    <text x="500" y="100" class="graph-text">Fès</text>
+
+                    <circle cx="100" cy="340" r="30" class="graph-node" />
+                    <text x="100" y="340" class="graph-text">Jadida</text>
+
+                    <circle cx="300" cy="380" r="32" class="graph-node" />
+                    <text x="300" y="380" class="graph-text">Kech</text>
+
+                    <circle cx="500" cy="340" r="32" class="graph-node" />
+                    <text x="500" y="340" class="graph-text">Mellal</text>
+
+                    <circle cx="300" cy="220" r="32" class="graph-node" style="stroke: #ef4444;" />
+                    <text x="300" y="220" class="graph-text">Casa</text>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // Mapping Logic:
+        // A=Tanger, B=Rabat, C=Fès, D=Jadida, E=Kech, F=Mellal, G=Casa
+
+        const steps = [
+            { id: 'e-g', weight: 1, action: 'accept', msg: 'Liaison Kech <-> Casa (Coût: 1)' },
+            { id: 'a-g', weight: 2, action: 'accept', msg: 'Liaison Tanger <-> Casa (Coût: 2)' },
+            { id: 'd-a', weight: 3, action: 'accept', msg: 'Liaison Jadida <-> Tanger (Coût: 3)' },
+            
+            // Reject Cycles
+            { id: 'e-d', weight: 4, action: 'reject', msg: 'Rejet: Jadida déjà reliée à Kech via Casa.' },
+            { id: 'd-g', weight: 4, action: 'reject', msg: 'Rejet: Jadida déjà reliée à Casa.' },
+            
+            { id: 'b-c', weight: 5, action: 'accept', msg: 'Liaison Rabat <-> Fès (Nouveau secteur).' },
+            { id: 'c-g', weight: 5, action: 'accept', msg: 'Raccordement Fès/Rabat au Hub Casa.' },
+            
+            // Rejects
+            { id: 'a-b', weight: 6, action: 'reject', msg: 'Rejet: Tanger et Rabat déjà interconnectés.' },
+            
+            { id: 'f-g', weight: 6, action: 'accept', msg: 'Liaison Mellal <-> Casa (Coût: 6).' },
+            
+            // Late Rejects
+            { id: 'f-e', weight: 7, action: 'reject', msg: 'Rejet: Cycle Mellal-Casa-Kech.' },
+            { id: 'c-f', weight: 8, action: 'reject', msg: 'Rejet: Cycle Fès-Casa-Mellal.' },
+            { id: 'b-g', weight: 9, action: 'reject', msg: 'Rejet: Route directe Rabat-Casa trop chère vs via Fès.' }
+        ];
+
+        let currentStepIndex = 0;
+        let totalCost = 0;
+
+        function nextStep() {
+            if (currentStepIndex >= steps.length) return;
+
+            const step = steps[currentStepIndex];
+            const logContainer = document.getElementById('log-container');
+            const emptyMsg = document.getElementById('empty-msg');
+            if(emptyMsg) emptyMsg.remove();
+
+            const edge = document.getElementById(`edge-${step.id}`);
+            const label = document.getElementById(`label-${step.id}`);
+            
+            setTimeout(() => {
+                if (step.action === 'accept') {
+                    edge.classList.add('edge-accepted');
+                    label.classList.add('label-accepted');
+                    totalCost += step.weight;
+                    document.getElementById('total-cost').innerText = totalCost;
+                    
+                    addLog(step, true);
+                } else {
+                    edge.classList.add('edge-rejected');
+                    label.classList.add('label-rejected');
+                    addLog(step, false);
+                }
+            }, 200);
+
+            currentStepIndex++;
+            document.getElementById('step-counter').innerText = `Étape ${currentStepIndex}/${steps.length}`;
+
+            if (currentStepIndex >= steps.length) {
+                const btn = document.getElementById('btn-next');
+                btn.innerText = "Réseau Optimisé";
+                btn.classList.replace('bg-blue-600', 'bg-green-600');
+                btn.classList.add('cursor-not-allowed', 'opacity-50');
+                btn.disabled = true;
+            }
+        }
+
+        function addLog(step, isAccepted) {
+            const container = document.getElementById('log-container');
+            const div = document.createElement('div');
+            div.className = "log-entry flex gap-3 items-start p-3 rounded-lg border " + (isAccepted ? "bg-green-50 border-green-100" : "bg-red-50 border-red-100 opacity-75");
+            
+            const icon = isAccepted ? '<i class="fa-solid fa-link text-green-600 mt-1"></i>' : '<i class="fa-solid fa-ban text-red-500 mt-1"></i>';
+            const weightBadge = `<span class="text-xs font-bold px-1.5 py-0.5 rounded ${isAccepted ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}">${step.weight}</span>`;
+            
+            div.innerHTML = `
+                ${icon}
+                <div class="text-sm">
+                    <div class="font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+                        Route ${step.id.toUpperCase()} ${weightBadge}
+                    </div>
+                    <div class="text-slate-600 leading-snug">${step.msg}</div>
+                </div>
+            `;
+            
+            container.prepend(div);
+        }
+
+        function resetGraph() {
+            currentStepIndex = 0;
+            totalCost = 0;
+            document.getElementById('total-cost').innerText = "0";
+            document.getElementById('step-counter').innerText = "Étape 0/12";
+            document.getElementById('log-container').innerHTML = '<p class="text-slate-400 text-sm italic text-center mt-10" id="empty-msg">Lancer l\'algorithme pour connecter les villes.</p>';
+            
+            const btn = document.getElementById('btn-next');
+            btn.innerHTML = 'Étape Suivante <i class="fa-solid fa-play ml-2"></i>';
+            btn.classList.replace('bg-green-600', 'bg-blue-600');
+            btn.classList.remove('cursor-not-allowed', 'opacity-50');
+            btn.disabled = false;
+
+            document.querySelectorAll('.graph-edge').forEach(el => {
+                el.classList.remove('edge-active', 'edge-accepted', 'edge-rejected');
+            });
+            document.querySelectorAll('.edge-label').forEach(el => {
+                el.classList.remove('label-active', 'label-accepted', 'label-rejected');
+            });
+        }
+    </script>
+</body>
+</html>
